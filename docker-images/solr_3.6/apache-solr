@@ -1,0 +1,40 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          apache-solr
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Apache Solr
+# Description:       Apache Solr search engine
+### END INIT INFO
+
+# Author: XXXXX XXXXXXXX <XXXXXXXXX@amasty.com>
+
+SOLR_DIR="/opt/solr/example"
+SOLR_USER="root"
+JAVA_OPTIONS="-Xmx1024m -DSTOP.PORT=10000 -DSTOP.KEY=jetty-stop-key -jar start.jar"
+LOG_FILE="/var/log/apache-solr.log"
+JAVA="java"
+
+case $1 in
+        start)  
+                echo "Starting Solr"
+                su - $SOLR_USER -c "cd $SOLR_DIR && exec $JAVA $JAVA_OPTIONS >$LOG_FILE 2>&1 &"
+                ;;
+        stop)   
+                echo "Stopping Solr"
+                su - $SOLR_USER -c "cd $SOLR_DIR && $JAVA $JAVA_OPTIONS --stop"
+                ;;
+        restart)
+                $0 stop
+                sleep 1
+                $0 start
+                ;;
+        *)      
+                echo "Usage: $0 {start|stop|restart}" >&2
+                exit 1
+                ;;
+esac
+
+:
