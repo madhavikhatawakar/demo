@@ -1,7 +1,8 @@
 version: "2"
 services:
   magentophpvarnish:
-    image: madhavikh/magentovarnish:v1.0.6
+    build: ./docker-images/varnish
+    image: madhavikh/magentovarnish:v_1.0
     ports:
       - "8090:80"
     volumes:
@@ -20,11 +21,12 @@ services:
      # echo $TZ > /etc/timezone"
 
   magentophpapp:
-    image: madhavikh/magentophp:v1.0.13
+    build: ./docker-images/php
+    image: madhavikh/magentophp:v_1.0
     ports:
       - "8080:8080"
     volumes:
-      - ./magentosrc:/var/www/html/magento
+      - ./magesrc:/var/www/html/magento
     links:
       - "solr"
       - "redis"
@@ -46,7 +48,8 @@ services:
 
 
   solr:
-    image: madhavikh/magentosolr:v3.6.9
+    build: ./docker-images/solr
+    image: madhavikh/magentosolr:v_1.0
     ports:
       - "8983:8983"
    # environment:
@@ -57,7 +60,8 @@ services:
 
 
   redis:
-    image: madhavikh/magentoredis:v_1.0.3
+    build: ./docker-images/redis
+    image: madhavikh/magentoredis:v_1.0
     ports:
       - "6379:6379"
     #environment:
@@ -73,7 +77,7 @@ services:
       - "3306:3306"
     volumes:
       - ./config/mysql/:/var/lib/mysql-files
-      - ./mysql_backup:/var/lib/mysql
+     # - ./mysql_backup:/var/lib/mysql
     environment:
        MYSQL_ROOT_PASSWORD: root
       #  TZ: "Asia/Calcutta"
